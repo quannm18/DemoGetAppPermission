@@ -1,6 +1,8 @@
 package com.example.demogetapppermission.viewmodel
 
+import android.annotation.SuppressLint
 import android.app.Application
+import android.content.pm.PackageManager
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
@@ -23,11 +25,12 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     ).flow.cachedIn(viewModelScope)
 
 
+    @SuppressLint("SuspiciousIndentation")
     suspend fun listPermission(packageName: String): Flow<MutableList<Pair<String, Boolean>>> = flow {
         val listPerm = mutableListOf<Pair<String, Boolean>>()
         withContext(Dispatchers.IO) {
             val pm = getApplication<Application>().packageManager
-            val listPackageInfo = pm.getInstalledPackages(0)
+            val listPackageInfo = pm.getInstalledPackages(PackageManager.GET_PERMISSIONS)
             Log.e("TAG::", "packageName: $packageName")
             Log.e("TAG::", "listPackageInfo: $listPackageInfo")
 
@@ -38,13 +41,13 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
                 Log.e("TAG:::", "---------------------------------------------\n")
             }
 
-//            val packageInfo = listPackageInfo.firstOrNull { it.packageName.contains(packageName)  }
-//            Log.e("TAG::", "listPermission: ${packageInfo?.requestedPermissions != null}")
-//            if (packageInfo?.requestedPermissions != null) {
-//                for (permission in packageInfo.requestedPermissions) {
-//                    listPerm.add(Pair(permission, pm.checkPermission(permission, packageInfo.packageName) == PackageManager.PERMISSION_GRANTED))
-//                }
-//            }
+            val packageInfo = listPackageInfo.firstOrNull { it.packageName.contains(packageName) }
+            Log.e("TAG::", "listPermission: ${packageInfo?.requestedPermissions != null}")
+            if (packageInfo?.requestedPermissions != null) {
+                for (permission in packageInfo.requestedPermissions) {
+                    listPerm.add(Pair(permission, pm.checkPermission(permission, packageInfo.packageName) == PackageManager.PERMISSION_GRANTED))
+                }
+            }
         }
         emit(listPerm)
     }

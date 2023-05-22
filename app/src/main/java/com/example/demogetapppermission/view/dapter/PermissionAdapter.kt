@@ -2,14 +2,12 @@ package com.example.demogetapppermission.view.dapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.example.demogetapppermission.databinding.ItemPermissionBinding
 
-class PermissionAdapter(private val action: (Pair<String, Boolean>) -> Unit) :
-    ListAdapter<Pair<String, Boolean>, PermissionAdapter.AppViewHolder>(Diff()) {
+class PermissionAdapter(private val action: (Pair<String, Boolean>) -> Unit) : ListAdapter<Pair<String, Boolean>, PermissionAdapter.AppViewHolder>(Diff()) {
 
     class AppViewHolder(var binding: ItemPermissionBinding, var action: (Pair<String, Boolean>) -> Unit) : ViewHolder(binding.root) {
 
